@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using system;
 
 public enum Cargos
 {
@@ -18,6 +17,17 @@ public class Empleado
     public DateTime FechaIngreso { get; set; }
     public double SueldoBasico { get; set; }
     public Cargos Cargo { get; set; }
+
+    public Empleado()
+    {
+        Nombre = "";
+        Apellido = "";
+        FechaNacimiento = DateTime.MinValue;
+        EstadoCivil = ' ';
+        FechaIngreso = DateTime.MinValue;
+        SueldoBasico = 0;
+        Cargo = Cargos.Auxiliar;
+    }
 
     public int Antiguedad()
     {
@@ -98,10 +108,38 @@ class Program
             Cargo = Cargos.Investigador
         };
 
-        
+        double montoTotal = 0;
         foreach (var emp in empleados)
         {
-            Console.WriteLine($"{emp.Nombre} {emp.Apellido} - Cargo: {emp.Cargo}");
+            montoTotal += emp.CalcularSalario();
         }
+
+        Console.WriteLine("Total a pagar por salarios: " + montoTotal);
+
+        Empleado proximoJubilado = empleados[0];
+
+        int minAnios = empleados[0].AniosParaJubilarse();
+
+        foreach (var emp in empleados)
+        {
+            if (emp.AniosParaJubilarse() < minAnios)
+            {
+                minAnios = emp.AniosParaJubilarse();
+                proximoJubilado = emp;
+            }
+        }
+
+        Console.WriteLine("\nEmpleado más próximo a jubilarse:");
+        Console.WriteLine($"Nombre: {proximoJubilado.Nombre} {proximoJubilado.Apellido}");
+        Console.WriteLine($"Fecha de nacimiento: {proximoJubilado.FechaNacimiento.ToShortDateString()}");
+        Console.WriteLine($"Edad: {proximoJubilado.Edad()} años");
+        Console.WriteLine($"Estado civil: {proximoJubilado.EstadoCivil}");
+        Console.WriteLine($"Fecha de ingreso: {proximoJubilado.FechaIngreso.ToShortDateString()}");
+        Console.WriteLine($"Antigüedad: {proximoJubilado.Antiguedad()} años");
+        Console.WriteLine($"Cargo: {proximoJubilado.Cargo}");
+        Console.WriteLine($"Sueldo básico: {proximoJubilado.SueldoBasico}");
+        Console.WriteLine($"Años para jubilarse: {proximoJubilado.AniosParaJubilarse()}");
+        Console.WriteLine($"Salario total: {proximoJubilado.CalcularSalario()}");
     }
+
 }
